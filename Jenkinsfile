@@ -1,20 +1,34 @@
 pipeline {
-    agent any
+    agent none
 
     stages {
         stage('Build') {
+            agent {
+                docker { image 'mcr.microsoft.com/dotnet/sdk:3.1' }
+            }
             steps {
-                echo 'Building..'
+                cd DotnetTemplate.Web
+                sh 'dotnet build'
             }
         }
-        stage('Test') {
+        stage('dotnet Test') {
+            agent {
+                docker { image 'mcr.microsoft.com/dotnet/sdk:3.1' }
+            }
             steps {
-                echo 'Testing..'
+                cd DotnetTemplate.Web.Tests
+                sh 'dotnet test'
             }
         }
-        stage('Deploy') {
+        stage('npm Test') {
+            agent {
+                docker { image 'node:14-alpine' }
+            }
             steps {
-                echo 'Deploying....'
+                cd DotnetTemplate.Web
+                sh 'npm -v'
+                sh 'npm i'
+                sh 'npm t'
             }
         }
     }
