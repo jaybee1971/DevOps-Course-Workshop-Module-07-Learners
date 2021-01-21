@@ -7,7 +7,9 @@ pipeline {
                 docker { image 'mcr.microsoft.com/dotnet/sdk:3.1' }
             }
             steps {
-                cd DotnetTemplate.Web
+                sh 'pwd'
+                sh 'ls'
+                sh 'cd DotnetTemplate.Web'
                 sh 'dotnet build'
             }
         }
@@ -16,7 +18,7 @@ pipeline {
                 docker { image 'mcr.microsoft.com/dotnet/sdk:3.1' }
             }
             steps {
-                cd DotnetTemplate.Web.Tests
+                sh 'cd DotnetTemplate.Web.Tests'
                 sh 'dotnet test'
             }
         }
@@ -25,7 +27,7 @@ pipeline {
                 docker { image 'node:14-alpine' }
             }
             steps {
-                cd DotnetTemplate.Web
+                sh 'cd DotnetTemplate.Web'
                 sh 'npm -v'
                 sh 'npm i'
                 sh 'npm t'
