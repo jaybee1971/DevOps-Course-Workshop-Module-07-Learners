@@ -6,10 +6,16 @@ pipeline {
             agent {
                 docker { image 'mcr.microsoft.com/dotnet/sdk:3.1' }
             }
+            environment {
+                DISABLE_AUTH = 'true'
+                DB_ENGINE    = 'sqlite'
+                DOTNET_CLI_HOME = "/tmp/DOTNET_CLI_HOME"
+            }
             steps {
                 sh 'pwd'
                 sh 'ls'
                 sh 'cd DotnetTemplate.Web'
+                sh 'ls'
                 sh 'dotnet build'
             }
         }
