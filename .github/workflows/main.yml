@@ -1,24 +1,39 @@
 # This is a basic workflow to help you get started with Actions
 
 name: Continuous Integration
-on: [push]                      # Will make the workflow run every time you push to any branch
+on: [push]
 
 jobs:
   build:
     name: Build and test
-    runs-on: ubuntu-latest      # Sets the build environment a machine with the latest Ubuntu installed
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2 # Adds a step to checkout the repository code
-    - name: Hello world       # Name of step
-      uses: actions/hello-world-javascript-action@v1.1 # Name of the action. This uses https://github.com/actions/hello-world-javascript-action
-      with:                                            # This section is needed if you need to pass arguments to the action
-        who-to-greet: 'Mona the Octocat'
-    - uses: actions/checkout@main
-    - uses: actions/setup-dotnet@v1
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET Core SDK 3.1
+      uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
-        node-version: '11.13.0'
-    - run: dotnet build
-    - run: dotnet test
-    - run: cd DotnetTemplate.Web && npm i && npm t && npm run lint
+        dotnet-version: 3.1.x
+
+    - name: Dotnet build
+      run: dotnet build --configuration Release
+
+    - name: Dotnet test
+      run: dotnet test
+
+    - name: Setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+
+    - name: Typescript install
+      run: npm ci
+      working-directory: ./DotnetTemplate.Web
+
+    - name: Typescript build
+      run: npm run build 
+      working-directory: ./DotnetTemplate.Web
+
+    - name: Typescript test
+      run: npm run test
+      working-directory: ./DotnetTemplate.Web
